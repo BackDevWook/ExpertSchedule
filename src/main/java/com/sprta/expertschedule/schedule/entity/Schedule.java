@@ -1,11 +1,13 @@
 package com.sprta.expertschedule.schedule.entity;
 
 
+import com.sprta.expertschedule.BaseEntity;
 import com.sprta.expertschedule.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Schedule {
+@EnableJpaAuditing
+public class Schedule extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +30,6 @@ public class Schedule {
 
     @Column(nullable = false, length = 500)
     private String content; // 내용
-
-    @Column(nullable = false)
-    private LocalDateTime createDate; // 작성일
-
-    @Column(nullable = false)
-    private LocalDateTime updateDate; // 수정일
 
     @ManyToOne
     @JoinColumn(name = "user_id")

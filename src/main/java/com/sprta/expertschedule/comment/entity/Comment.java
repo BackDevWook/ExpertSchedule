@@ -1,11 +1,14 @@
 package com.sprta.expertschedule.comment.entity;
 
+import com.sprta.expertschedule.BaseEntity;
 import com.sprta.expertschedule.schedule.entity.Schedule;
 import com.sprta.expertschedule.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +16,8 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
+@EnableJpaAuditing
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +25,6 @@ public class Comment {
 
     @Column(nullable = false)
     private String content;
-
-    @Column(nullable = false)
-    private LocalDateTime createDate;
-
-    @Column(nullable = false)
-    private LocalDateTime updateDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
