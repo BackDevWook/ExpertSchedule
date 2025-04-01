@@ -4,13 +4,11 @@ import com.sprta.expertschedule.BaseEntity;
 import com.sprta.expertschedule.schedule.entity.Schedule;
 import com.sprta.expertschedule.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -28,11 +26,11 @@ public class Comment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User userId;
 
     @ManyToOne
     @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
+    private Schedule scheduleId;
 
 
 }

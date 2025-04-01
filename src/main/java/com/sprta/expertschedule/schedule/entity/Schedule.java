@@ -30,6 +30,13 @@ public class Schedule extends BaseEntity {
     private String content; // 내용
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user; // user 외래키
+
+    public Schedule(String userName, String title, String content, User user) {
+        this.userName = userName;
+        this.title = title;
+        this.content = content;
+        this.user = user;
+    }
 }

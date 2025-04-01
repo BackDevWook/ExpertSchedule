@@ -56,8 +56,8 @@ public class UserController {
     }
 
     // 로그아웃
-    @DeleteMapping("/logout")
-    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
+    @DeleteMapping("/logout/{loginId}")
+    public ResponseEntity<String> logout(@PathVariable String loginId, HttpServletRequest request, HttpServletResponse response) {
 
         // 세션 삭제
         HttpSession loginSession = request.getSession(false);
@@ -75,8 +75,8 @@ public class UserController {
     }
 
     // 비밀번호 변경
-    @PatchMapping
-    public ResponseEntity<String> updatePassword(@RequestParam String loginId, HttpServletRequest request, @RequestBody @Valid UpdatePasswordDto updatePasswordDto) {
+    @PatchMapping("/{loginId}")
+    public ResponseEntity<String> updatePassword(@PathVariable String loginId, HttpServletRequest request, @RequestBody @Valid UpdatePasswordDto updatePasswordDto) {
 
         // 로그인 여부
         HttpSession loginSession = request.getSession(false);
@@ -93,8 +93,8 @@ public class UserController {
     }
 
     // 계정 삭제
-    @DeleteMapping
-    public ResponseEntity<String> deleteUser(@RequestParam String loginId, HttpServletRequest request, @RequestBody DeleteUserAccountDto deleteUserAccountDto) {
+    @DeleteMapping("/{loginId}")
+    public ResponseEntity<String> deleteUser(@PathVariable String loginId, HttpServletRequest request, @RequestBody DeleteUserAccountDto deleteUserAccountDto) {
 
         // 로그인 여부
         HttpSession loginSession = request.getSession(false);
