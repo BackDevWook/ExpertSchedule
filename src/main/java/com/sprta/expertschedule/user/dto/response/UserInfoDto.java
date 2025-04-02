@@ -10,6 +10,6 @@ import java.time.LocalDateTime;
 public class UserInfoDto {
 
     private String userName; // 사용자 이름
-    private LocalDateTime createTime; // 가입 날짜
+    private LocalDateTime createDateTime; // 가입 날짜
 
 }

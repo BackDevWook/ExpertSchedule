@@ -36,6 +36,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
 
+        // 비밀번호 검증
         if(!userService.matchPassword(loginDto.getLoginId(), loginDto.getPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
@@ -56,13 +57,12 @@ public class UserController {
     }
 
     // 로그아웃
-    @DeleteMapping("/logout/{loginId}")
-    public ResponseEntity<String> logout(@PathVariable String loginId, HttpServletRequest request, HttpServletResponse response) {
+    @DeleteMapping("/cl/logout/{loginId}")
+    public ResponseEntity<String> logout(@PathVariable String loginId, HttpSession session, HttpServletResponse response) {
 
-        // 세션 삭제
-        HttpSession loginSession = request.getSession(false);
-        if(loginSession != null) {
-            loginSession.invalidate();
+        // 세션이 존재하면 삭제
+        if(session != null) {
+            session.invalidate();
         }
 
         // 쿠키 삭제
@@ -75,16 +75,8 @@ public class UserController {
     }
 
     // 비밀번호 변경
-    @PatchMapping("/{loginId}")
-    public ResponseEntity<String> updatePassword(@PathVariable String loginId, HttpServletRequest request, @RequestBody @Valid UpdatePasswordDto updatePasswordDto) {
-
-        // 로그인 여부
-        HttpSession loginSession = request.getSession(false);
-        if(loginSession == null) {
-            throw new RuntimeException("로그인 해주셈");
-        } else if (loginSession.getAttribute("LOGIN_ID") == null) {
-            throw new RuntimeException("로그인 정보가 없음");
-        }
+    @PatchMapping("/cl/{loginId}")
+    public ResponseEntity<String> updatePassword(@PathVariable String loginId, @RequestBody @Valid UpdatePasswordDto updatePasswordDto) {
 
         // 비밀번호 인증 후 변경
         userService.updatePassword(loginId, updatePasswordDto);
@@ -93,14 +85,8 @@ public class UserController {
     }
 
     // 계정 삭제
-    @DeleteMapping("/{loginId}")
-    public ResponseEntity<String> deleteUser(@PathVariable String loginId, HttpServletRequest request, @RequestBody DeleteUserAccountDto deleteUserAccountDto) {
-
-        // 로그인 여부
-        HttpSession loginSession = request.getSession(false);
-        if(loginSession == null) {
-            throw new RuntimeException("로그인 해주셈");
-        }
+    @DeleteMapping("/cl/{loginId}")
+    public ResponseEntity<String> deleteUser(@PathVariable String loginId, @RequestBody DeleteUserAccountDto deleteUserAccountDto) {
 
         // 비밀번호 인증 후 삭제
         userService.deleteUserAccount(loginId, deleteUserAccountDto);

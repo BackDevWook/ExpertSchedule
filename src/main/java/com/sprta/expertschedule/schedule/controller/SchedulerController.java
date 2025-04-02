@@ -1,15 +1,15 @@
 package com.sprta.expertschedule.schedule.controller;
 
 import com.sprta.expertschedule.schedule.dto.request.CreateScheduleDto;
+import com.sprta.expertschedule.schedule.dto.request.UpdateScheduleDto;
+import com.sprta.expertschedule.schedule.dto.response.ScheduleInfoDto;
 import com.sprta.expertschedule.schedule.service.ScheduleService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/schedule")
@@ -19,31 +19,46 @@ public class SchedulerController {
     private final ScheduleService scheduleService;
 
     // POST : 일정 생성하기
-    @PostMapping
-    public ResponseEntity<String> createSchedule(@RequestBody @Valid CreateScheduleDto createScheduleDto, HttpSession session) {
+    @PostMapping("/cl")
+    public ResponseEntity<String> createSchedule(@RequestBody @Valid CreateScheduleDto createScheduleDto, @SessionAttribute(name = "LOGIN_ID") String loginid) {
 
-        // 로그인한 사용자 정보 가져오기
-        String loginId = session.getAttribute("LOGIN_ID").toString();
-        // 로그인하지 않았다면 예외처리
-        if(loginId == null) {
-            throw new RuntimeException("로그인좀요");
-        }
-
-        scheduleService.createSchedule(scheduleService.getUser(loginId).get(), createScheduleDto);
+        scheduleService.createSchedule(scheduleService.getUser(loginid).get(), createScheduleDto);
 
         return ResponseEntity.ok("스케줄 생성 됌");
     }
 
     // GET : 일정 조회하기
-
+    @GetMapping("/{id}")
+    public ResponseEntity<ScheduleInfoDto> getSchedule(@PathVariable Long id) {
+        return ResponseEntity.ok(scheduleService.getSchedule(id));
+    }
 
     // GET : 일정 전체 조회하기(페이징)
+    @GetMapping
+    public ResponseEntity<List<ScheduleInfoDto>> getSchedules() {
+        return ResponseEntity.ok(scheduleService.getAllSchedules());
+    }
 
+    // Patch : 일정 수정하기
+    @PatchMapping("/cl/{id}")
+    public ResponseEntity<String> updateSchedule(@PathVariable Long id, @RequestBody @Valid UpdateScheduleDto updateScheduleDto, @SessionAttribute(name = "LOGIN_ID") String loginid) {
 
-    // PUT : 일정 수정하기
+        // 스케줄 수정
+        scheduleService.updateSchedule(updateScheduleDto, id, loginid);
 
+        return ResponseEntity.ok("잘 수정 됌");
+    }
 
     // DELETE : 일정 삭제하기
+    @DeleteMapping({"/cl/{id}"})
+    public ResponseEntity<String> DeleteSchedule(@PathVariable Long id, @SessionAttribute(name = "LOGIN_ID") String loginid) {
+
+        // 스케줄 삭제
+        scheduleService.deleteSchedule(loginid, id);
+
+        return ResponseEntity.ok("잘 삭제됌");
+
+    }
 
 
 
