@@ -7,7 +7,6 @@ import com.sprta.expertschedule.schedule.entity.Schedule;
 import com.sprta.expertschedule.schedule.repository.ScheduleRepository;
 import com.sprta.expertschedule.user.entity.User;
 import com.sprta.expertschedule.user.repository.UserRepository;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

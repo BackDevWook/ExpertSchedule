@@ -7,11 +7,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EnableJpaAuditing
@@ -26,11 +28,17 @@ public class Comment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User userId;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "schedule_id")
-    private Schedule scheduleId;
+    private Schedule schedule;
+
+    public Comment(String content, User user, Schedule schedule) {
+        this.content = content;
+        this.user = user;
+        this.schedule = schedule;
+    }
 
 
 }

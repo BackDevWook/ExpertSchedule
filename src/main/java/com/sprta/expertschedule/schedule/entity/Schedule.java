@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -31,7 +33,7 @@ public class Schedule extends BaseEntity {
     @Column(nullable = false, length = 500)
     private String content; // 내용
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user; // user 외래키
 
