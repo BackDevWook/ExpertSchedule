@@ -20,7 +20,7 @@ public class SignUpRequestDto {
 
     @NotNull
     @Size(max = 100)
-    @Email
+    @Pattern(regexp = "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식이 아닙니다.")
     private String email;
 
     @NotBlank

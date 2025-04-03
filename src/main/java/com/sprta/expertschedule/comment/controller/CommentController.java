@@ -7,6 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +27,6 @@ public class CommentController {
     // GET : 일정의 댓글 전체 조회
     @GetMapping("/{scheduleId}")
     public ResponseEntity<List<CommentInfoDto>> getAllComment(@PathVariable Long scheduleId) {
-
         return ResponseEntity.ok(commentService.getAllComment(scheduleId));
     }
 
@@ -38,7 +42,7 @@ public class CommentController {
         // 댓글 생성
         commentService.CreateComment(createCommentDto, loginId, scheduleId);
 
-        return ResponseEntity.ok("댓글 달아짐");
+        return ResponseEntity.status(HttpStatus.CREATED).body("댓글 생성 됌");
     }
     // PATCH : 댓글 수정
     @PatchMapping("/cl/{commentId}")

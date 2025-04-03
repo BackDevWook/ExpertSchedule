@@ -5,6 +5,7 @@ import com.sprta.expertschedule.user.dto.request.LoginDto;
 import com.sprta.expertschedule.user.dto.request.SignUpRequestDto;
 import com.sprta.expertschedule.user.dto.request.UpdatePasswordDto;
 import com.sprta.expertschedule.user.dto.response.UserInfoDto;
+import com.sprta.expertschedule.user.repository.UserRepository;
 import com.sprta.expertschedule.user.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +13,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,13 +30,14 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
 
     // 회원가입 요청
     @PostMapping("/register")
     public ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto) {
         userService.singUp(signUpRequestDto);
-        return ResponseEntity.ok("회원가입 성공함");
+        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입 성공함 ㅊㅋ");
     }
 
     // 로그인 요청
@@ -38,7 +46,7 @@ public class UserController {
 
         // 비밀번호 검증
         if(!userService.matchPassword(loginDto.getLoginId(), loginDto.getPassword())) {
-            throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("비밀번호 틀림;;");
         }
         // 세션
         HttpSession loginSession = request.getSession();
@@ -52,7 +60,7 @@ public class UserController {
         sessionCookie.setHttpOnly(true); // 자바스크립트 멈춰!
         response.addCookie(sessionCookie);
 
-        return ResponseEntity.ok("로그인 성공");
+        return ResponseEntity.status(HttpStatus.CREATED).body("로그인 성공함 ㅊㅋ");
 
     }
 
@@ -78,7 +86,6 @@ public class UserController {
     @PatchMapping("/cl/{loginId}")
     public ResponseEntity<String> updatePassword(@PathVariable String loginId, @RequestBody @Valid UpdatePasswordDto updatePasswordDto) {
 
-        // 비밀번호 인증 후 변경
         userService.updatePassword(loginId, updatePasswordDto);
 
         return ResponseEntity.ok("비밀번호 변경 성공");
@@ -88,7 +95,6 @@ public class UserController {
     @DeleteMapping("/cl/{loginId}")
     public ResponseEntity<String> deleteUser(@PathVariable String loginId, @RequestBody DeleteUserAccountDto deleteUserAccountDto) {
 
-        // 비밀번호 인증 후 삭제
         userService.deleteUserAccount(loginId, deleteUserAccountDto);
 
         return ResponseEntity.ok("잘 삭제 됌");
@@ -102,7 +108,8 @@ public class UserController {
 
     // 유저 전체 조회
     @GetMapping
-    public ResponseEntity<List<UserInfoDto>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUserInfo());
+    public ResponseEntity<Page<UserInfoDto>> getAllUsers(@PageableDefault(size = 5, sort = "userName", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        return ResponseEntity.ok(userService.getAllUserInfo(pageable));
     }
 }

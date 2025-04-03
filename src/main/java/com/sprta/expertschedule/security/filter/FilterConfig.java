@@ -10,7 +10,7 @@ public class FilterConfig {
 
 
     @Bean
-    public FilterRegistrationBean filterLogin() {
+    public FilterRegistrationBean filterLogin() { // 로그인 인증
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>(); //
         filterRegistrationBean.setFilter(new LoginFilter()); // 필터 등록
         filterRegistrationBean.addUrlPatterns("/*");

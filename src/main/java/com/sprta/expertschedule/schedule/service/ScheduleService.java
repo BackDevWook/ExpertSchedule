@@ -5,9 +5,13 @@ import com.sprta.expertschedule.schedule.dto.request.UpdateScheduleDto;
 import com.sprta.expertschedule.schedule.dto.response.ScheduleInfoDto;
 import com.sprta.expertschedule.schedule.entity.Schedule;
 import com.sprta.expertschedule.schedule.repository.ScheduleRepository;
+import com.sprta.expertschedule.security.customerrors.UnauthorizedScheduleAccessException;
 import com.sprta.expertschedule.user.entity.User;
 import com.sprta.expertschedule.user.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,11 +57,21 @@ public class ScheduleService {
                 schedule.getUpdateDate()
         )).collect(Collectors.toList());
     }
+    // 페이징 적용된 일정 전체 조회
+    public Page<ScheduleInfoDto> getAllSchedules(Pageable pageable) {
+        return scheduleRepository.findAll(pageable).map(schedule -> new ScheduleInfoDto(
+                schedule.getUserName(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getCreateDate(),
+                schedule.getUpdateDate()
+        ));
+    }
 
     // 일정 단일 조회
     public ScheduleInfoDto getSchedule(Long scheduleId) {
 
-        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new RuntimeException("해당 스케줄 없음"));
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new EntityNotFoundException("해당 스케줄 없음"));
 
         return new ScheduleInfoDto(
                 schedule.getUserName(),
@@ -72,7 +86,7 @@ public class ScheduleService {
     public void updateSchedule(UpdateScheduleDto updateScheduleDto, Long id, String loginId) {
 
         // 스케줄 존재 여부 확인 및 타겟팅
-        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new RuntimeException("스케줄 존재 안함"));
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("스케줄 존재 안함"));
 
         // 해당 일정의 생성자가 맞는지 확인 후 처리
         if(matchScheduleWithUser(loginId, id)) {
@@ -80,7 +94,7 @@ public class ScheduleService {
             schedule.setContent(updateScheduleDto.getContent());
             scheduleRepository.save(schedule);
         } else {
-            throw new RuntimeException("당신이 주인이 아님");
+            throw new UnauthorizedScheduleAccessException("당신이 주인이 아님");
         }
 
     }
@@ -89,12 +103,12 @@ public class ScheduleService {
     public void deleteSchedule(String loginId, Long id) {
 
         // 스케줄 존재 여부 확인 및 타겟팅
-        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new RuntimeException("스케줄 존재 안함"));
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("스케줄 존재 안함"));
         // 해당 일정의 생성자가 맞는지 확인 후 처리
         if(matchScheduleWithUser(loginId, id)) {
             scheduleRepository.delete(schedule);
         } else {
-            throw new RuntimeException("당신이 주인이 아님");
+            throw new UnauthorizedScheduleAccessException("당신이 주인이 아님");
         }
 
     }

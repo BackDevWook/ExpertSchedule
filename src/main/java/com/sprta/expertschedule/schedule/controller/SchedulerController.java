@@ -6,6 +6,11 @@ import com.sprta.expertschedule.schedule.dto.response.ScheduleInfoDto;
 import com.sprta.expertschedule.schedule.service.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +29,7 @@ public class SchedulerController {
 
         scheduleService.createSchedule(scheduleService.getUser(loginid).get(), createScheduleDto);
 
-        return ResponseEntity.ok("스케줄 생성 됌");
+        return ResponseEntity.status(HttpStatus.CREATED).body("일정 생성 됌");
     }
 
     // GET : 일정 조회하기
@@ -35,8 +40,8 @@ public class SchedulerController {
 
     // GET : 일정 전체 조회하기(페이징)
     @GetMapping
-    public ResponseEntity<List<ScheduleInfoDto>> getSchedules() {
-        return ResponseEntity.ok(scheduleService.getAllSchedules());
+    public ResponseEntity<Page<ScheduleInfoDto>> getSchedules(@PageableDefault(size = 5, sort = "userName", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseEntity.ok(scheduleService.getAllSchedules(pageable));
     }
 
     // Patch : 일정 수정하기
