@@ -15,7 +15,7 @@ import java.io.IOException;
 public class LoginFilter implements Filter {
 
     // 인증이 필요한 URL
-    private static final String[] CHECK_LOGIN_URL = {"/cl/**", "/cl"}; // 앞글자 이름 따서 cl ㅎㅎ
+    private static final String[] CHECK_LOGIN_URL = {"/users/cl/**", "/schedules/cl/**", "/comments/cl/**"}; // 앞글자 이름 따서 cl ㅎㅎ
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -26,7 +26,7 @@ public class LoginFilter implements Filter {
 
         // URL 따오기
         String requestURL = request.getRequestURI();
-
+        log.info(requestURL);
         log.info("로그인 여부 검사 실행");
 
         // 검사가 필요한 URL 이면 실행

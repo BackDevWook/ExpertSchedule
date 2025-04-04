@@ -2,7 +2,7 @@
 # User
 
 ### 1. 회원가입 
-    - POST /user/register
+    - POST /users/register
    
 
 - Request Body
@@ -27,7 +27,7 @@
 
 ***
 ### 2. 로그인
-    - POST /user/login
+    - POST /users/login
    
 
 - Reqeust Body
@@ -50,8 +50,7 @@
 ```
 ***
 ### 3. 로그아웃
-    - DELETE /user/cl/logout/{loginId}
-    - Path Variable : loginId (String)
+    - DELETE /users/cl/logout
 
 - Response 
 
@@ -65,7 +64,7 @@
 ***
 
 ### 4.비밀번호 변경
-    - PATCH /user/cl/{loginId}
+    - PATCH /users/cl/{loginId}
     - Path Variable : loginId (String)
 
 - Reqeust Body
@@ -87,7 +86,7 @@
 ***
 
 ### 5.계정 삭제
-    - DELETE /user/cl/{loginId}
+    - DELETE /users/cl/{loginId}
     - Path Variable : loginId (String)
 
 - Request Body
@@ -106,7 +105,7 @@
 ***
 
 ### 6.유저 정보 조회
-    - GET /user/{loginId}
+    - GET /users/{loginId}
     - Path Variable : loginId (String)
 
 - Response
@@ -123,7 +122,7 @@
 - 404 Not Found (유저가 없을 경우)
 ***
 ### 7.유저 전체 조회 (페이징 적용)
-    - GET /user
+    - GET /users
     - Query Parameters (Optional)
         - page : 페이지 번호 (기본값 : 0)
         - size : 한 페이지에 보여줄 개수 (기본값 : 5)

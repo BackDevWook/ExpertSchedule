@@ -4,7 +4,7 @@
 
 ### 요청
 - **Method:** `POST`
-- **URL:** `/schedule/cl`
+- **URL:** `/schedules/cl`
 - **Headers:**
     - `Content-Type: application/json`
 - **Body:** (JSON)
@@ -26,7 +26,7 @@
 
 ### 요청
 - **Method:** `GET`
-- **URL:** `/schedule/{id}`
+- **URL:** `/schedules/{id}`
 - **Path Variable:**
     - `id` (Long) - 조회할 일정 ID
 
@@ -49,7 +49,7 @@
 
 ### 요청
 - **Method:** `GET`
-- **URL:** `/schedule`
+- **URL:** `/schedules`
 - **Query Parameters:**
     - `size` (int, 기본값: 5) - 페이지 크기
     - `sort` (String, 기본값: `userName,desc`) - 정렬 기준
@@ -80,7 +80,7 @@
 
 ### 요청
 - **Method:** `PATCH`
-- **URL:** `/schedule/cl/{id}`
+- **URL:** `/schedules/cl/{id}`
 - **Path Variable:**
     - `id` (Long) - 수정할 일정 ID
 - **Headers:**
@@ -104,7 +104,7 @@
 
 ### 요청
 - **Method:** `DELETE`
-- **URL:** `/schedule/cl/{id}`
+- **URL:** `/schedules/cl/{id}`
 - **Path Variable:**
     - `id` (Long) - 삭제할 일정 ID
 - **Session Attribute:** `LOGIN_ID`

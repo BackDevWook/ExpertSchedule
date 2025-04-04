@@ -13,19 +13,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
+@Slf4j
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -65,19 +65,25 @@ public class UserController {
     }
 
     // 로그아웃
-    @DeleteMapping("/cl/logout/{loginId}")
-    public ResponseEntity<String> logout(@PathVariable String loginId, HttpSession session, HttpServletResponse response) {
+    @DeleteMapping("/cl/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
 
+        HttpSession session = request.getSession(false);
         // 세션이 존재하면 삭제
         if(session != null) {
             session.invalidate();
+            log.info("세션이 삭제 됌");
         }
 
         // 쿠키 삭제
         Cookie sessionCookie = new Cookie("SESSION_ID", null);
+        Cookie jsessionIdCookie = new Cookie("JSESSIONID", null);
         sessionCookie.setMaxAge(0);
         sessionCookie.setPath("/");
         response.addCookie(sessionCookie);
+        jsessionIdCookie.setMaxAge(0);
+        jsessionIdCookie.setPath("/");
+        response.addCookie(jsessionIdCookie);
 
         return ResponseEntity.ok("로그아웃 됌");
     }
